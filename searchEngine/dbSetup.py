@@ -15,7 +15,11 @@ def insertDocument(collection, title, content):
                 'title': title,
                 'content': content
               }
-    collection.insert_one(payLoad)
+    return collection.insert_one(payLoad)
+
+
+def getDocument(collection, query):
+    return collection.find(query).sort('title')
 
 
 def main():
