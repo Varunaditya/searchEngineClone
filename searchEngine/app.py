@@ -19,12 +19,13 @@ def search():
     return getDocument(collection, myQuery)
 
 
-@app.route('/insert', methods = ['POST'])
+@app.route('/insert', methods=['POST'])
 def insert():
-    title = request.args.get('title')
-    content = request.args.get('content')
+    postedData = request.get_json()
+    title = postedData['title']
+    content = postedData['content']
     insertDocument(collection, title, content)
-    return
+    return 'OK'
 
 
 if __name__ == '__main__':
