@@ -8,12 +8,37 @@
               <input type="text"
                      class="form-control"
                      v-model="searchQuery">
+              <br>
+              <button class="btn-success btn"
+                      @click.prevent="getQuery">Search</button>
             </form>
-          <ul class="list-group"
-              v-if="items.length">
-            <li v-for="item in items"
-                class="list-group-item">{{ item }}</li>
-          </ul>
+          <!--<br><br>-->
+          <!--<p>{{ item }}</p>-->
+          <!--<ul class="list-group"-->
+              <!--v-if="items.length">-->
+            <!--<li v-for="item in items"-->
+                <!--class="list-group-item"-->
+                <!--v-if="item">-->
+               <!--{{ item.split('-')[0] }}-->
+            <!--</li>-->
+          <!--</ul>-->
+
+          <span v-if="items.length"
+                v-for="item in items">
+            <div class="card" v-if="item">
+              <div class="card-header">
+                {{ item.split('-')[0] }}
+              </div>
+              <div class="card-body">
+                <!--<h4 class="card-title">Special title treatment</h4>-->
+                <p class="card-text">{{ item.split('-')[1] }}</p>
+              </div>
+            </div>
+            <br>
+          </span>
+
+
+
         </div>
       </div>
     </div>
@@ -25,7 +50,10 @@
         data(){
           return {
             searchQuery: '',
-            items: []
+            items: '',
+            item: '',
+            titles: [],
+            contents: []
           };
         },
         mounted(){
@@ -43,13 +71,16 @@
               window.hinterXHR.abort();
               window.hinterXHR.onreadystatechange = function(){
                 if(this.readyState == 4 && this.status == 200) {
-                  var response = JSON.parse(this.responseText);
-                  app.items = response;
+                  // var response = JSON.parse(this.responseText);
+                  app.items = (this.responseText.split('|'));
                 }
               };
-              window.hinterXHR.open('GET', '/api/search?name=' + app.searchQuery, true);
+              window.hinterXHR.open('GET', '/api/search?title=' + app.searchQuery, true);
               window.hinterXHR.send();
             }
+          },
+          getQuery(){
+              this.hinter();
           }
         }
     }

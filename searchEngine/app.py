@@ -1,35 +1,39 @@
-from flask import Flask, request, jsonify, make_response
-from dbSetup import createConnection, createCollection, insertDocument, getDocument
+from flask import Flask
+from flask import request
+from flask_pymongo import PyMongo
 
 app = Flask(__name__)
+app.config['MONGO_DBNAME'] = 'searchEngine'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/searchEngine'
 
-db = createConnection('searchEngine')
-
-collection = createCollection(db, 'queries')
+mongo = PyMongo(app)
 
 
-def main():
-    global db, collection
+def debug(data):
+    print('*' * 1000)
+    print(data)
+    print('*' * 1000)
 
 
 @app.route('/search', methods=['GET'])
 def search():
-    data = request.args.get('string')
+    retDocuments = ''
+    data = request.args.get('title')
     myQuery = {'title': {'$regex': data}}
-    return getDocument(collection, myQuery)
+    collection = mongo.db.queries
+    for i in collection.find(myQuery, {'_id': 0}):
+        retDocuments += '{}-{}'.format(str(i['title']), str(i['content'])) + '|'
+    return str(retDocuments)
 
 
 @app.route('/insert', methods=['POST'])
 def insert():
-    postedData = request.get_json()
-    title = postedData['title']
-    content = postedData['content']
-    insertDocument(collection, title, content)
+    title = request.json['title']
+    content = request.json['content']
+    collection = mongo.db.queries
+    collection.insert({'title': title, 'content': content})
     return 'OK'
 
 
 if __name__ == '__main__':
-    main()
     app.run(debug=True)
-
-
