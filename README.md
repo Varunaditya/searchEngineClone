@@ -13,3 +13,5 @@ This is a search clone SPA created using JavaScript's Vue and Python's flask.
 3. Install the dependencies ```pip3 install flask | apt-get install mongodb```
 4. Navigate into the Vue project directory ```./searchEngine/client```
 5. Install Vue and the Node dependencies ```npm install```
+6. Run the backend server ```python3 searchEngine/app.py```
+7. Run the frontend serevr ```cd searchEngine/client; npm run dev```
