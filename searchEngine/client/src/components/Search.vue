@@ -12,17 +12,6 @@
               <button class="btn-success btn"
                       @click.prevent="getQuery">Search</button>
             </form>
-          <!--<br><br>-->
-          <!--<p v-for="item in items">{{ item }}</p>-->
-          <!--<ul class="list-group"-->
-              <!--v-if="items.length">-->
-            <!--<li v-for="item in items"-->
-                <!--class="list-group-item"-->
-                <!--v-if="item">-->
-               <!--{{ item.split('-')[0] }}-->
-            <!--</li>-->
-          <!--</ul>-->
-
           <span v-if="items.length"
                 v-for="item in items">
             <div class="card">
@@ -30,15 +19,11 @@
                 {{ item.title }}
               </div>
               <div class="card-body justify-content">
-                <!--<h4 class="card-title">Special title treatment</h4>-->
                 <p class="card-text">{{ item.content }}</p>
               </div>
             </div>
             <br>
           </span>
-
-
-
         </div>
       </div>
     </div>
@@ -50,10 +35,7 @@
         data(){
           return {
             searchQuery: '',
-            items: '',
-            item: '',
-            titles: [],
-            contents: []
+            items: []
           };
         },
         mounted(){
