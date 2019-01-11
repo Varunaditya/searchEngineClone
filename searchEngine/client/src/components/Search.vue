@@ -13,7 +13,7 @@
                       @click.prevent="getQuery">Search</button>
             </form>
           <!--<br><br>-->
-          <!--<p>{{ item }}</p>-->
+          <!--<p v-for="item in items">{{ item }}</p>-->
           <!--<ul class="list-group"-->
               <!--v-if="items.length">-->
             <!--<li v-for="item in items"-->
@@ -25,13 +25,13 @@
 
           <span v-if="items.length"
                 v-for="item in items">
-            <div class="card" v-if="item">
+            <div class="card">
               <div class="card-header">
-                {{ item.split('-')[0] }}
+                {{ item.title }}
               </div>
-              <div class="card-body">
+              <div class="card-body justify-content">
                 <!--<h4 class="card-title">Special title treatment</h4>-->
-                <p class="card-text">{{ item.split('-')[1] }}</p>
+                <p class="card-text">{{ item.content }}</p>
               </div>
             </div>
             <br>
@@ -71,8 +71,8 @@
               window.hinterXHR.abort();
               window.hinterXHR.onreadystatechange = function(){
                 if(this.readyState == 4 && this.status == 200) {
-                  // var response = JSON.parse(this.responseText);
-                  app.items = (this.responseText.split('|'));
+                  var response = JSON.parse(this.responseText);
+                  app.items = response;
                 }
               };
               window.hinterXHR.open('GET', '/api/search?title=' + app.searchQuery, true);
