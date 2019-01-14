@@ -8,18 +8,33 @@
               <input type="text"
                      class="form-control"
                      v-model="searchQuery">
+              <div class="card"
+                   v-if="showResult">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item"
+                      v-for="item in items"
+                      style="cursor: pointer"
+                      @click="expandResult(item)">{{ item.title }}</li>
+                </ul>
+              </div>
+              <span v-if="noResultMsg">
+                <br>
+                <p class="font-weight-bold text-muted text-center">
+                  No Result
+                </p>
+              </span>
               <br>
               <button class="btn-success btn"
-                      @click.prevent="getQuery">Search</button>
+                      @click.prevent=""
+                      style="display: none;">Search</button>
             </form>
-          <span v-if="items.length"
-                v-for="item in items">
+          <span v-if="title">
             <div class="card">
               <div class="card-header">
-                {{ item.title }}
+                {{ title }}
               </div>
               <div class="card-body justify-content">
-                <p class="card-text">{{ item.content }}</p>
+                <p class="card-text text-justify">{{ content }}</p>
               </div>
             </div>
             <br>
@@ -35,7 +50,11 @@
         data(){
           return {
             searchQuery: '',
-            items: []
+            items: [],
+            title: '',
+            content: '',
+            showResult: true,
+            noResultMsg: false
           };
         },
         mounted(){
@@ -43,6 +62,8 @@
         },
         watch: {
           searchQuery: function () {
+            this.noResultMsg = false;
+            this.showResult = true;
             this.hinter();
           }
         },
@@ -60,14 +81,19 @@
                 if(this.readyState == 4 && this.status == 200) {
                   var response = JSON.parse(this.responseText);
                   app.items = response;
+                  if(app.items.length == 0){
+                    app.noResultMsg = true;
+                  }
                 }
               };
               window.hinterXHR.open('GET', '/api/search?title=' + app.searchQuery, true);
               window.hinterXHR.send();
             }
           },
-          getQuery(){
-              this.hinter();
+          expandResult(result){
+            this.showResult = false;
+            this.title = result.title;
+            this.content = result.content;
           }
         }
     }
