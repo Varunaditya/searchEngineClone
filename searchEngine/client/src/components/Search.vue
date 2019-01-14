@@ -41,8 +41,13 @@
         mounted(){
           window.hinterXHR = new XMLHttpRequest();
         },
+        watch: {
+          searchQuery: function () {
+            this.hinter();
+          }
+        },
         methods: {
-          hinter(event){
+          hinter(){
             var app = this;
             var minChars = 3;
             if (app.searchQuery.length < minChars) {
